@@ -186,7 +186,7 @@ Flag: tpctf{omg_b1c_m0dulus}
 
 ![Imgur](https://i.imgur.com/3kBExVy.png)
 
-#### <span style="color:red">6. RSA 3 - rehack </span>
+#### <span style="color:red">7. RSA 3 - rehack </span>
 
 ~~~
 Given:
@@ -217,6 +217,38 @@ flag = pow(c,d,n)
 Result is:
 
 ![Imgur](https://i.imgur.com/qXkFXwQ.png)
+
+~~~
+Flag: d4rk{r3p34t3ed_RsA_1s_f0r_n00bs}
+~~~
+
+#### <span style="color:red">7. RSA 4 - Tool online </span>
+
+~~~
+Given:
+
+- ciphertext (base64): PePAW8C9Lm7yxsyA2MShozuHpDrRZJssZECWAYULMEMq7pfcX4cUyKpWvW8ZVQis+KtxT7pa1LEcq4UvYW8Gm44nTUwPOOzqw86MXonJ8Mwgx9gXlZHNReG/X2+bynejQo36b1axIt9RujXCxXzEsOzO/gpSVE24bgvwwvU+C28= 
+
+- public key :
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCO5+gAGMWkPvEtXWLRaqxSm3PeNtMMDfbGQs15Gms7trqxGnK+pjZslc4oVyw6cu5RHrt4YpfGY1VeXG8ZeIiY5BagA7eMP8Rv5ixblyhA51MMDNd/+gNcDZH4MvtM1KsDYYeeD9SXKrBI10znG7nxV4fAB39Y4PW8UzMv8GFVEQIDAQAB
+~~~
+
+Using this [website](https://www.devglan.com/online-tools/rsa-encryption-decryption) and choose mode `public key`
+
+Result is:
+
+![Imgur](https://i.imgur.com/TuxNbjk.png)
+
+Flag:
+
+~~~
+Flag: SBCTF{53cu23_data_724n5m15510n}
+~~~
+
+#### <span style="color:red">8. RSA 4 - Tool online </span>
+
+
+
 
 
 
