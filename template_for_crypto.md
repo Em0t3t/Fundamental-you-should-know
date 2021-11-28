@@ -245,7 +245,170 @@ Flag:
 Flag: SBCTF{53cu23_data_724n5m15510n}
 ~~~
 
-#### <span style="color:red">8. RSA 4 - Tool online </span>
+#### <span style="color:red">8. RSA 5 - Three file pub </span>
+
+
+Given:
+- file `bob.pub`
+
+~~~
+-----BEGIN PUBLIC KEY-----
+MDgwDQYJKoZIhvcNAQEBBQADJwAwJAIdDVZLl4+dIzUElY7ti3RDcyge0UGLKfHs
++oCT2M8CAwEAAQ==
+-----END PUBLIC KEY-----
+~~~
+- file `bob2.pub`
+
+~~~
+-----BEGIN PUBLIC KEY-----
+MDgwDQYJKoZIhvcNAQEBBQADJwAwJAIdCiM3Dn0PsAIyFkrG1kKED8VOkgJDP5J6
+YOta29kCAwEAAQ==
+-----END PUBLIC KEY-----
+
+~~~
+
+- file `bob3.pub`
+
+~~~
+-----BEGIN PUBLIC KEY-----
+MDgwDQYJKoZIhvcNAQEBBQADJwAwJAIdDFtp4ZeeVB+F2s3iqhTSciqEb0Gz24Pm
+Z+Oz0R0CAwEAAQ==
+-----END PUBLIC KEY-----
+~~~
+
+- file `secret.enc`
+
+~~~
+DK9dt2MTybMqRz/N2RUMq2qauvqFIOnQ89mLjXY=
+
+AK/WPYsK5ECFsupuW98bCFKYUApgrQ6LTcm3KxY=
+
+CiLSeTUCCKkyNf8NVnifGKKS2FJ7VnWKnEdygXY=
+~~~
+
+Solution:
+
+Using:
+
+~~~
+from Crypto.PublicKey import RSA
+
+f = open('bob.pub', 'r')
+pubkey = RSA.import_key(f.read())
+
+print("n = ", pubkey.n)
+print("e = ", pubkey.e)
+~~~
+
+And use this [link](https://www.alpertron.com.ar/ECM.HTM) to factorizer a number
+
+`Part 1:`
+
+~~~
+n = 359567260516027240236814314071842368703501656647819140843316303878351
+e = 65537
+p =  17963604736595708916714953362445519
+q =  20016431322579245244930631426505729
+phi_n = (p-1)*(q-1)
+d = inverse(e,phi_n)
+c_base64 = DK9dt2MTybMqRz/N2RUMq2qauvqFIOnQ89mLjXY=
+~~~
+
+`Part 2:`
+
+~~~
+n = 273308045849724059815624389388987562744527435578575831038939266472921
+e = 65537
+p = 16514150337068782027309734859141427
+q = 16549930833331357120312254608496323
+phi_n = (p-1)*(q-1)
+d = inverse(e,phi_n)
+c_base64 = CiLSeTUCCKkyNf8NVnifGKKS2FJ7VnWKnEdygXY=
+~~~
+
+`Part 3:`
+
+~~~
+n = 333146335555060589623326457744716213139646991731493272747695074955549
+e = 65537
+p = 17357677172158834256725194757225793
+q = 19193025210159847056853811703017693
+phi_n = (p-1)*(q-1)
+d = inverse(e,phi_n)
+c_base64 = AK/WPYsK5ECFsupuW98bCFKYUApgrQ6LTcm3KxY=
+~~~
+
+Solution:
+
+```py
+from Crypto.PublicKey import RSA 
+from Crypto.Util.number import *
+from base64 import b64decode
+
+
+# First process
+
+# f = open('bob3.pub', 'r')
+# pubkey = RSA.import_key(f.read())
+
+# print("n = ", pubkey.n)
+# print("e = ", pubkey.e)
+
+# Second process
+## Part 1
+
+# n = 359567260516027240236814314071842368703501656647819140843316303878351
+# e = 65537
+# p = 17963604736595708916714953362445519
+# q = 20016431322579245244930631426505729
+# phi_n = (p-1)*(q-1)
+# d = inverse(e,phi_n)
+# c_base64 = "DK9dt2MTybMqRz/N2RUMq2qauvqFIOnQ89mLjXY="
+# c = bytes_to_long(b64decode(c_base64))
+# flag = long_to_bytes(pow(c,d,n))
+# print(flag)
+
+# Ans 1: IW{WEAK_R
+
+## Part 2
+# n = 273308045849724059815624389388987562744527435578575831038939266472921
+# e = 65537
+# p = 16514150337068782027309734859141427
+# q = 16549930833331357120312254608496323
+# phi_n = (p-1)*(q-1)
+# d = inverse(e,phi_n)
+# c_base64 = "CiLSeTUCCKkyNf8NVnifGKKS2FJ7VnWKnEdygXY="
+# c = bytes_to_long(b64decode(c_base64))
+# flag = long_to_bytes(pow(c,d,n))
+# print(flag)
+
+# Ans 2: SA_K3YS_4R
+
+## Part 3 
+# n = 333146335555060589623326457744716213139646991731493272747695074955549
+# e = 65537
+# p = 17357677172158834256725194757225793
+# q = 19193025210159847056853811703017693
+# phi_n = (p-1)*(q-1)
+# d = inverse(e,phi_n)
+# c_base64 = "AK/WPYsK5ECFsupuW98bCFKYUApgrQ6LTcm3KxY="
+# c = bytes_to_long(b64decode(c_base64))
+# flag = long_to_bytes(pow(c,d,n))
+# print(flag)
+
+# # Ans 3: _SO_BAD!}
+
+# FLAG : IW{WEAK_RSA_K3YS_4R_SO_BAD!}
+```
+
+~~~
+Flag: IW{WEAK_RSA_K3YS_4R_SO_BAD!}
+~~~
+
+
+
+
+
 
 
 
