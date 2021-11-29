@@ -186,7 +186,7 @@ Flag: tpctf{omg_b1c_m0dulus}
 
 ![Imgur](https://i.imgur.com/3kBExVy.png)
 
-#### <span style="color:red">7. RSA 3 - rehack </span>
+#### <span style="color:red">7. RSA 3 - rshack </span>
 
 ~~~
 Given:
@@ -403,6 +403,78 @@ from base64 import b64decode
 
 ~~~
 Flag: IW{WEAK_RSA_K3YS_4R_SO_BAD!}
+~~~
+
+#### <span style="color:red">9. RSA 6 - File PEM </span>
+
+Given:
+
+`public.pem`
+
+~~~
+
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEBITsFfW/evEUntbdCGsHp
+PM/+p2xPCHSZHPP6zw6rnvZGohg5ggtNZTqRa2jyWOnT98K6BU5K8F8+TWGz3nct
+KtIziw6ubqCPIHbk5LCKsgkg+miF5sRN7BvuKKh2U8dLy56fEpTeiki9YUZSo9ZZ
+3857iURhDyW/r5NumlQWfE0ifRbTLmXqRYtp1g3s1/oDTBs72GJxcWTneF6wbcxb
+iLqiYuQxIOVGZcDLyz6tUbCgCBm06R1IctP753JOA6txvK+LuEx03slqrfyxhlOo
+8FOT1mYGmSO8e5sxNj1tbZtFn0bbW6+W+EBKrxqDHw24qtfZOkJW6BVrK3B1egEg
+kwIDAQAB
+-----END PUBLIC KEY-----
+~~~
+
+`flag.enc`
+
+~~~
+Cc0GtEY4nL7DhDukClWKaTHChrCVJeVVm3MJ+6hgiqaYUjbx9ArCrH0uzdfDqf4l81NAqV0fGtd8a9H4dlEQRykvOwpFpViK4qTU1H28nEMZ6O1Hnt9NrLxlSvpARZd8hxoJtXiwUbZI6rcI9lQwt+pJLvrvw2/Mz+fBMvrVPFONSYDH/lU0wy4jKbH0zl7zJ09+gCBo9oJ2Hqpsh0BkcS6ix5lDu/6JENG/ChC7jZGYWpte+QIkb/fQTwsw3tGIz1jWYhqQ8MrSxtGpyyPG9Oy/zGHIBEBDesS4r72D8n2mQExRnCH2KW5wz5hsM2TXYRILtJqWCOyv/AF56Ebg9A==
+~~~
+
+`Solution`
+
+- Step 1: Find `n,e,c`
+
+```py
+from Crypto.Util.number import *
+from Crypto.PublicKey import RSA
+from base64 import b64decode 
+
+f = open("public.pem","r")
+public = RSA.import_key(f.read())
+n = public.n 
+e = public.e
+print("n = ",public.n)
+print("e = ",public.e)
+c_base64 = "Cc0GtEY4nL7DhDukClWKaTHChrCVJeVVm3MJ+6hgiqaYUjbx9ArCrH0uzdfDqf4l81NAqV0fGtd8a9H4dlEQRykvOwpFpViK4qTU1H28nEMZ6O1Hnt9NrLxlSvpARZd8hxoJtXiwUbZI6rcI9lQwt+pJLvrvw2/Mz+fBMvrVPFONSYDH/lU0wy4jKbH0zl7zJ09+gCBo9oJ2Hqpsh0BkcS6ix5lDu/6JENG/ChC7jZGYWpte+QIkb/fQTwsw3tGIz1jWYhqQ8MrSxtGpyyPG9Oy/zGHIBEBDesS4r72D8n2mQExRnCH2KW5wz5hsM2TXYRILtJqWCOyv/AF56Ebg9A=="
+c = long_to_bytes(b64decode(c_base64))
+```
+
+- Step 2: Using [factorize](https://www.alpertron.com.ar/ECM.HTM) to factorize `n`, we have `n` is prime, so `phi(n)=n-1`. Then we have `d = inverse(e,phi(n))` and `flag = pow(c,d,n)`
+
+`Total code:`
+
+```py
+from Crypto.Util.number import *
+from Crypto.PublicKey import RSA
+from base64 import b64decode 
+
+f = open("public.pem","r")
+public = RSA.import_key(f.read())
+n = public.n 
+e = public.e
+print("n = ",public.n)
+print("e = ",public.e)
+c_base64 = "Cc0GtEY4nL7DhDukClWKaTHChrCVJeVVm3MJ+6hgiqaYUjbx9ArCrH0uzdfDqf4l81NAqV0fGtd8a9H4dlEQRykvOwpFpViK4qTU1H28nEMZ6O1Hnt9NrLxlSvpARZd8hxoJtXiwUbZI6rcI9lQwt+pJLvrvw2/Mz+fBMvrVPFONSYDH/lU0wy4jKbH0zl7zJ09+gCBo9oJ2Hqpsh0BkcS6ix5lDu/6JENG/ChC7jZGYWpte+QIkb/fQTwsw3tGIz1jWYhqQ8MrSxtGpyyPG9Oy/zGHIBEBDesS4r72D8n2mQExRnCH2KW5wz5hsM2TXYRILtJqWCOyv/AF56Ebg9A=="
+c = bytes_to_long(b64decode(c_base64))
+print("c = ",c)
+phi_n = n-1 
+d = inverse(e,phi_n)
+flag = long_to_bytes(pow(c,d,n))
+print(flag)
+```
+
+~~~
+Flag: Flag{S1nGL3_PR1m3_M0duLUs_ATT4cK_TaK3d_D0wn_RSA_T0_A_Sym3tr1c_ALg0r1thm} 
 ~~~
 
 
