@@ -477,6 +477,92 @@ print(flag)
 Flag: Flag{S1nGL3_PR1m3_M0duLUs_ATT4cK_TaK3d_D0wn_RSA_T0_A_Sym3tr1c_ALg0r1thm} 
 ~~~
 
+#### <span style="color:red">10. RSA 7 - Round Rabin </span>
+
+Given 
+
+```
+n = 0x6b612825bd7972986b4c0ccb8ccb2fbcd25fffbadd57350d713f73b1e51ba9fc4a6ae862475efa3c9fe7dfb4c89b4f92e925ce8e8eb8af1c40c15d2d99ca61fcb018ad92656a738c8ecf95413aa63d1262325ae70530b964437a9f9b03efd90fb1effc5bfd60153abc5c5852f437d748d91935d20626e18cbffa24459d786601
+e = 2
+c = 0xd9d6345f4f961790abb7830d367bede431f91112d11aabe1ed311c7710f43b9b0d5331f71a1fccbfca71f739ee5be42c16c6b4de2a9cbee1d827878083acc04247c6e678d075520ec727ef047ed55457ba794cf1d650cbed5b12508a65d36e6bf729b2b13feb5ce3409d6116a97abcd3c44f136a5befcb434e934da16808b0b
+```
+
+Require: `Find flag`
+
+`Step 1` : Convert `n,c` into decimal
+
+```py
+n = "0x6b612825bd7972986b4c0ccb8ccb2fbcd25fffbadd57350d713f73b1e51ba9fc4a6ae862475efa3c9fe7dfb4c89b4f92e925ce8e8eb8af1c40c15d2d99ca61fcb018ad92656a738c8ecf95413aa63d1262325ae70530b964437a9f9b03efd90fb1effc5bfd60153abc5c5852f437d748d91935d20626e18cbffa24459d786601"
+c = "0xd9d6345f4f961790abb7830d367bede431f91112d11aabe1ed311c7710f43b9b0d5331f71a1fccbfca71f739ee5be42c16c6b4de2a9cbee1d827878083acc04247c6e678d075520ec727ef047ed55457ba794cf1d650cbed5b12508a65d36e6bf729b2b13feb5ce3409d6116a97abcd3c44f136a5befcb434e934da16808b0b"
+nn = int(n,16)
+cc = int(c,16)
+```
+
+`Step 2` : Using [factorize big number online](https://www.alpertron.com.ar/ECM.HTM) we found that: `n=p*p`
+
+Using this algorithm to find `p`:
+
+```py
+import math
+
+_1_50 = 1 << 50  # 2**50 == 1,125,899,906,842,624
+def isqrt(x):
+    """Return the integer part of the square root of x, even for very
+    large integer values."""
+    if x < 0:
+        raise ValueError('square root not defined for negative numbers')
+    if x < _1_50:
+        return int(math.sqrt(x))  # use math's sqrt() for small parameters
+    n = int(x)
+    if n <= 1:
+        return n  # handle sqrt(0)==0, sqrt(1)==1
+    # Make a high initial estimate of the result (a little lower is slower!!!)
+    r = 1 << ((n.bit_length() + 1) >> 1)
+    while True:
+        newr = (r + n // r) >> 1  # next estimate by Newton-Raphson
+        if newr >= r:
+            return r
+        r = newr
+nn = 75404462446621433278932073418166377856783371695311741162660984000216286022717332034344886883228963555598915581623574177254937709767805818855313080010310907057693076782794571905025544034519430835894406844610021327070351428935856401291946497064114909504725588880164068827953784803548706132824333011073782801921
+print(isqrt(nn))
+```
+
+Result: `p=8683574289808398551680690596312519188712344019929990563696863014403818356652403139359303583094623893591695801854572600022831462919735839793929311522108161`
+
+Now, we will find research some bit knowledge about `Quadratic residue`
+
+In number theory, an interger q is called a quadratic residue module n if it is congruent to a perfect square modulo n; i.e if there exists an integer x such that `x^2=q(mod n)`.
+
+Otherwise, q is called a quadratic nonresidue modulo n.
+
+Next, we will get familiar with `Legendre Symbol`
+
+In Legendre symbol we introduced a fast way to determine whether a number is a square root modulo a prime. We can go further: there are algorithms for efficiently calculating such roots. The best one in practice is called `Tonelli-Shanks`, which gets its funny name from the fact that is was first described by an Italian in the 19th century and rediscovered independently by Daniel Shanks in the 1970s.
+
+All primes that aren't `2` are of the form `p=1 (mod 4)` or `p=3 (mod 4)`, since all odd numbers obey these congruences. As the previous challenge hinted, in the `p=3 (mod 4)` case, a really simple formula for computing square roots can be derived directly from Fermat's little theorem. That leaves us still with the `p=1(mod 4)` case, so a more general algorithm is required.
+
+In a congruence of the form `r^2 = a(mod p)`, `Tonelli-Shanks` calculates `r`
+
+Note: Tonelli-Shanks doesn't work for composite(non-prime) moduli. Finding square roots modulo composites is computationally equivalent to integer factorization.
+
+Next, we will have research `Legendre symbol`:
+
+![Imgur](https://i.imgur.com/KWKAnvv.png)
+
+And some characteristic of this:
+
+![Imgur](https://i.imgur.com/lt4lOia.png) 
+
+and last is example:
+
+![Imgur](https://i.imgur.com/VnfJGDh.png) 
+
+Another we can reference some special symbols such as: [Jacobi symbol](https://vi.wikipedia.org/wiki/K%C3%BD_hi%E1%BB%87u_Jacobi) and [Kronecker Symbol](https://en.wikipedia.org/wiki/Kronecker_symbol)
+
+Continued: [P1](https://cryptohack.org/challenges/maths/) and [P2](https://en.wikipedia.org/wiki/Rabin_cryptosystem) and [P3](https://github.com/WCSC/writeups/tree/master/icectf-2016/Round-Rabins)
+
+
+
 
 
 
