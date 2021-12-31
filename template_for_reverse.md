@@ -154,3 +154,15 @@ print(TRX.value)
 ```
 
 `Flag: flag{N1ce_Emul8tor!1}`
+
+####  <span style="color:red">2. TÌM CỜ TRONG FILE BINARY</span>
+
+Link problem: [THE MORE THE MERRIER](https://247ctf.com/dashboard)
+
+![Imgur](https://i.imgur.com/uCMPkT4.png) 
+
+Và công việc lúc này ta chỉ cần sử dụng python để viết một đoạn code đơn giản nhằm loại bỏ các khoảng trống không cần thiết để thu được cờ:
+
+![Imgur](https://i.imgur.com/1bocA6h.png)
+
+`Flag: 247CTF{6df215eb3cc73407267031a15b0ab36c}`
