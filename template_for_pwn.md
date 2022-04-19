@@ -109,11 +109,13 @@
 ## 8. one_gadget
 - Display the offset address of execve("/bin/sh") with the constraints in the binary file.
 - Example:
+	
 	![image](https://i.ibb.co/W0rKNgg/pwn-tool-1.png)
 
 ## 9. ldd
 - Find which library file will be loaded when the binary runs
 - Example:
+	
 	![image](https://i.ibb.co/CvQ2KQH/pwn-tool-2.png)
 
 ## 10. patchelf
