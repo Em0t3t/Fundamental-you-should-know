@@ -22,7 +22,7 @@
 
 ## 2. gdb-peda
 - CLI debug tool
-- [Install guild](https://github.com/longld/peda)
+- [Install guide](https://github.com/longld/peda)
 - Usage:
 	| Command | Meaning |
 	|---------|---------|
