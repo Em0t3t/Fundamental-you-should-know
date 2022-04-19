@@ -195,4 +195,13 @@ picoCTF{F1r57_4rgum3n7_96f2195f}
 
 Tiếp theo ta sẽ tải file đó về, và thực hiện các bước như phần mô tả đã trình bày
 
+```
+chmod +x gdbme
+gdb gdbme
+(gdb) layout asm
+(gdb) break *(main+99)
+(gdb) run
+(gdb) jump *(main+104)
+```
+
 Link thực hiện: [Solution](https://youtu.be/-2wOYw9t4eg)
