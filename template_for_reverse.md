@@ -166,3 +166,33 @@ Và công việc lúc này ta chỉ cần sử dụng python để viết một 
 ![Imgur](https://i.imgur.com/1bocA6h.png)
 
 `Flag: 247CTF{6df215eb3cc73407267031a15b0ab36c}`
+
+####  <span style="color:red">3. picoCTF - file-run1</span>
+
+LINK PROBLEM: [file-run1](https://play.picoctf.org/practice/challenge/266?category=3&originalEvent=70&page=1&solved=0)
+
+Bài này sau khi tải file `run` về, click chuột và chọn mở bằng `notepad`
+
+Sau đó, mở bằng Text Editor, tìm kiếm với từ khoá `pico`, ta thu được:
+
+~~~
+picoCTF{U51N6_Y0Ur_F1r57_F113_e5559d46}
+~~~
+
+####  <span style="color:red">4. picoCTF - file-run2</span>
+
+LINK PROBLEM: [file-run2](https://play.picoctf.org/practice/challenge/267?category=3&originalEvent=70&page=1&solved=0)
+
+Bài này tương tự bài `file-run1`, ta cũng sẽ thu được 
+
+~~~
+picoCTF{F1r57_4rgum3n7_96f2195f}
+~~~
+
+####  <span style="color:red">5. picoCTF - GDB Test Drive </span>
+
+Để thực hiện được các thao tác liệt kê trong description, ta nên sử dụng hệ điều hành Linux, ở đây mình sử dụng Kali Linux
+
+Tiếp theo ta sẽ tải file đó về, và thực hiện các bước như phần mô tả đã trình bày
+
+Link thực hiện: [Solution](https://youtu.be/-2wOYw9t4eg)
