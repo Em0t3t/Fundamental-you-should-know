@@ -1058,6 +1058,142 @@ And flag is:
 crew{d15cr373_l06_15_r3duc710n_f0r_f4c70r1n6}
 ~~~
 
+#### <span style="color:red">14. XOR, JSON, Time and netcat </span>
+
+LINK PROBLEM: [GOTTA GO FAST](https://cryptohack.org/challenges/misc/)
+
+Problem statement: Connect at `nc socket.cryptohack.org 13372` and file `13372.py`
+
+```py
+#!/usr/bin/env python3
+
+import time
+from Crypto.Util.number import long_to_bytes
+import hashlib
+from utils import listener
+
+
+FLAG = b'crypto{????????????????????}'
+
+
+def generate_key():
+    current_time = int(time.time())
+    key = long_to_bytes(current_time)
+    return hashlib.sha256(key).digest()
+
+
+def encrypt(b):
+    key = generate_key()
+    assert len(b) <= len(key), "Data package too large to encrypt"
+    ciphertext = b''
+    for i in range(len(b)):
+        ciphertext += bytes([b[i] ^ key[i]])
+    return ciphertext.hex()
+
+
+class Challenge():
+    def __init__(self):
+        self.before_input = "Gotta go fast!\n"
+
+    def challenge(self, your_input):
+        if not 'option' in your_input:
+            return {"error": "You must send an option to this server"}
+
+        elif your_input['option'] == 'get_flag':
+            return {"encrypted_flag": encrypt(FLAG)}
+
+        elif your_input['option'] == 'encrypt_data':
+            input_data = bytes.fromhex(your_input['input_data'])
+            return {"encrypted_data": encrypt(input_data)}
+
+        else:
+            return {"error": "Invalid option"}
+
+
+"""
+When you connect, the 'challenge' function will be called on your JSON
+input.
+"""
+listener.start_server(port=13372)
+
+```
+
+This is my solution:
+
+Firstly, we see that: `encrypted_flag = flag[i]^key[i]` and `encrypted_data = input_data[i]^key[i]`
+
+And suppose that, we can input with `input_data = crypto{????????????????????}`, and the difficult point of this problem is `key` because key is created follow current time
+
+So, after a few moment thinking and guess, I found that, when distance between moment is very little, key at 2 moment is same ! 
+
+=> `flag = encrypted_flag ^ encrypted_date ^ input_data`
+
+And this is my code. 
+
+### Phase 1: Get `encrypted_flag` and `encrypted_data`
+
+```py
+from pwn import * 
+import time
+from Crypto.Util.number import long_to_bytes
+import hashlib
+import json
+r = remote("socket.cryptohack.org",13372)
+u = r.recvline()
+FLAG_FAKE = b'crypto{????????????????????}'
+la_time = str(FLAG_FAKE.hex())
+res1 = '{"option":"get_flag"}'
+r.sendline(res1.encode())
+u = r.recvline()
+print(u)
+res2 = '{"option":"encrypt_data","input_data":'+chr(34)+la_time+chr(34)+'}'
+r.sendline(res2.encode())
+u = r.recvline()
+print(u)
+#y = json.loads(u)
+#print(bytes.fromhex(y["encrypted_data"]))
+```
+And we get result
+
+~~~
+b'{"encrypted_flag": "39c97bfb78d7007419b01867c812994c53725bf244d7b17533f409e6"}\n'
+b'{"encrypted_data": "39c97bfb78d7003f16bf783ec35ed22c187d54921d9dfc233cbe03e6"}\n'
+~~~
+
+### Phase 2: Find `flag`
+
+```py
+# b'{"encrypted_flag": "39c97bfb78d7007419b01867c812994c53725bf244d7b17533f409e6"}\n'
+# b'{"encrypted_data": "39c97bfb78d7003f16bf783ec35ed22c187d54921d9dfc233cbe03e6"}\n'
+enc_flag = "39c97bfb78d7007419b01867c812994c53725bf244d7b17533f409e6"
+enc_data = "39c97bfb78d7003f16bf783ec35ed22c187d54921d9dfc233cbe03e6"
+
+enc_flag_byte = bytes.fromhex(enc_flag)
+enc_data_byte = bytes.fromhex(enc_data)
+FLAG_FAKE = b'crypto{????????????????????}'
+arr1 = []
+arr2 = []
+arr3 = []
+arr4 = []
+ress = ""
+for u in enc_flag_byte:
+    arr1.append(u)
+for u in enc_data_byte:
+    arr2.append(u)
+for u in FLAG_FAKE:
+    arr3.append(u)
+for i in range(28):
+    arr4.append(arr1[i]^arr2[i]^arr3[i])
+    ress = ress + chr(arr1[i]^arr2[i]^arr3[i])
+print(ress)
+```
+
+And ger result:
+
+~~~
+crypto{t00_f4st_t00_furi0u5}
+~~~
+
 
 
 
