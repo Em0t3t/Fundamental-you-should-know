@@ -22,4 +22,12 @@
 
 12. [https://book.hacktricks.xyz/pentesting-web/cors-bypass](cor-bypass)
 
-13. []
+13. [https://ctfacademy.github.io/network/index.htm](Network forensics)
+
+14. [https://www.youtube.com/watch?v=93lkPLMbZnE](ARM & x86-64 Assembly Code Emulator)
+
+15. [https://overiq.com/c-programming-101/character-array-and-character-pointer-in-c/](Character Array and Character Pointer in C)
+
+16. [https://thesecmaster.com/10-best-online-pen-testing-platforms-to-practice-your-skills/](10 Best Online Pen-Testing Platforms To Practice Your Skills)
+
+17. 
