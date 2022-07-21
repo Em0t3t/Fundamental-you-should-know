@@ -28,6 +28,6 @@
 
 15. [https://overiq.com/c-programming-101/character-array-and-character-pointer-in-c/](Character Array and Character Pointer in C)
 
-16. [https://thesecmaster.com/10-best-online-pen-testing-platforms-to-practice-your-skills/](10 Best Online Pen-Testing Platforms To Practice Your Skills)
+16. [https://thesecmaster.com/blog/](10 Best Online Pen-Testing Platforms To Practice Your Skills)
 
 17. 
