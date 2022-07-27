@@ -1194,9 +1194,13 @@ And ger result:
 crypto{t00_f4st_t00_furi0u5}
 ~~~
 
+#### <span style="color:red">15. ROCA Attack - Factorize a big number </span>
 
+Link: https://github.com/FlorianPicca/ROCA/tree/master
 
+#### <span style="color:red">16. Crypto - LITCTF 2022 </span>
 
+Link: https://github.com/LexMACS/LIT-CTF-2022/tree/main/crypto
 
 
 
