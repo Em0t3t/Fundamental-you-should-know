@@ -1202,6 +1202,239 @@ Link: https://github.com/FlorianPicca/ROCA/tree/master
 
 Link: https://github.com/LexMACS/LIT-CTF-2022/tree/main/crypto
 
+#### <span style="color:red">17. Crypto - thefewchosen 2022 </span>
+
+#### 🎶🎁🎁TRAINING TO PADDING TON - CRYPTO MEDIUM
+
+😎😎 CRYPTO mà nó lạ lắm, REVERSE thì đúng hơn :_)
+
+✈🧨🏳‍🌈Cũng lâu lắm rồi, chưa viết cái write up để mọi người đọc cho vui, nên hôm nay được chút rãnh chiều chủ nhật, viết lại chút đỉnh :)
+
+Ok, challenge cho chúng ta 2 file, 1 file là thuật toán mã hoá và 1 file là output
+
+```py
+import os
+
+BLOCK_SIZE = 16
+FLAG = b'|||REDACTED|||'
+
+
+
+
+def pad_pt(pt):
+    amount_padding = 16 if (16 - len(pt) % 16) == 0 else 16 - len(pt) % 16
+    return pt + (b'\x3f' * amount_padding)
+
+pt = pad_pt(FLAG)
+
+key = os.urandom(BLOCK_SIZE)
+
+ct = b''
+
+j = 0
+for i in range(len(pt)):
+    ct += (key[j] ^ pt[i]).to_bytes(1, 'big')
+    j += 1
+    j %= 16
+
+with open('output.txt', 'w') as f:
+    f.write(ct.hex())
+
+```
+
+và file output là:
+
+```txt
+b4b55c3ee34fac488ebeda573ab1f974bf9b2b0ee865e45a92d2f14b7bdabb6ed4872e4dd974e803d9b2ba1c77baf725
+```
+
+😍😍Thì như thường lệ, trước tiên, chúng ta đi hiểu cái thuật toán mã hoá nó nói 
+những gì đã ! 
+
+🤷‍♂️ Thì trước tiên, ta đi unhex cái chuỗi `b4b55c3ee34fac488ebeda573ab1f974bf9b2b0ee865e45a92d2f14b7bdabb6ed4872e4dd974e803d9b2ba1c77baf725` này để xem nó ra cái gì ! 
+
+```py
+ct_hex = "b4b55c3ee34fac488ebeda573ab1f974bf9b2b0ee865e45a92d2f14b7bdabb6ed4872e4dd974e803d9b2ba1c77baf725"
+ct = b''.fromhex(ct_hex)
+```
+
+💖💖 Tiếp theo, ta sẽ đi tìm hiểu cái vòng for:
+
+```py
+for i in range(len(pt)):
+    ct += (key[j] ^ pt[i]).to_bytes(1, 'big')
+    j += 1
+    j %= 16
+```
+
+🤔 Về cơ bản, cái này toàn phép tính toán bình thường, chỉ có cái function `to_bytes(1, 'big')` này là hơi lạ một chút, nhưng thật ra cũng ez, đó là nó chuyển từ số sang ký tự mà thôi. Ví dụ: `111` --> `to_bytes(1,'big')` sẽ thành `'o'`
+
+🎨🎨🎨 Tiếp theo, ta sẽ đi tìm hiểu cái `def pad_pt(pt)` nó nói cái gì trong đó:
+
+```py
+def pad_pt(pt):
+    amount_padding = 16 if (16 - len(pt) % 16) == 0 else 16 - len(pt) % 16
+    return pt + (b'\x3f' * amount_padding)
+```
+
+Đoạn code này khá dễ hiểu:
+
+Giả sử cái pt ta truyền vào là FLAG đi, với `FLAG = b'TFCCTF{aaaaaaaaaaaaaaaaaaaaaaaa}`
+
+Thì kết quả nó trả về là: `b'TFCCTF{aaaaaaaaaaaaaaaaaaaaaaaa}????????????`
+
+🐱‍🐉🐱‍🐉 Chúng ta chú ý: `b'\x3f'` chính là dấu `?`
+
+🙌🙌 Còn cái `key = os.urandom(BLOCK_SIZE)` thì thực chắc nó sinh một chuỗi random có 16 bytes thôi ! 
+
+Đến đây, có vẻ mọi thứ đã dễ dàng hơn ! 
+
+Công việc, của chúng ta là đi tìm cái key random này thôi ! 
+
+🎪🎪🎪 Nào, ta cùng tiến hành phá vụ án này nhé !
+
+🎨 Bước 1: Đi unhex cái output đề bài cho và xem thử nó có bao nhiêu bytes !
+
+💎 Code:
+
+```py
+ct_hex = "b4b55c3ee34fac488ebeda573ab1f974bf9b2b0ee865e45a92d2f14b7bdabb6ed4872e4dd974e803d9b2ba1c77baf725"
+ct = b''.fromhex(ct_hex)
+print("After unhex: ",ct)
+print("Number of bytes",len(ct))
+print("Convert into integers array: ")
+a = []
+for u in ct:
+    a.append(u) 
+print(a)
+```
+
+😉 Kết quả ta nhận được:
+
+```txt
+After unhex:  b'\xb4\xb5\\>\xe3O\xacH\x8e\xbe\xdaW:\xb1\xf9t\xbf\x9b+\x0e\xe8e\xe4Z\x92\xd2\xf1K{\xda\xbbn\xd4\x87.M\xd9t\xe8\x03\xd9\xb2\xba\x1cw\xba\xf7%'
+Number of bytes 48
+Convert into integers array:
+[180, 181, 92, 62, 227, 79, 172, 72, 142, 190, 218, 87, 58, 177, 249, 116, 191, 155, 43, 14, 232, 101, 228, 90, 146, 210, 241, 75, 123, 218, 187, 110, 212, 135, 46, 77, 217, 116, 232, 3, 217, 178, 186, 28, 119, 186, 247, 37]
+```
+
+Okie, và ta sẽ gán mảng này với lên là: `arr_long=[180, 181, 92, 62, 227, 79, 172, 72, 142, 190, 218, 87, 58, 177, 249, 116, 191, 155, 43, 14, 232, 101, 228, 90, 146, 210, 241, 75, 123, 218, 187, 110, 212, 135, 46, 77, 217, 116, 232, 3, 217, 178, 186, 28, 119, 186, 247, 37]`
+
+🐱‍🚀🐱‍🚀 Và chúng ta chú ý là cái mảng này có 48 ký tự đấy nhé ! 
+
+💖💖 Ok, bây giờ chúng ta sẽ quay lại `pt`. Vì cái `arr_long` này nó có `48` ký tự nên cái `pt` nó sẽ cũng có `48` ký tự và nó sẽ có dạng như sau:
+
+`TFCCTF{xx...xxx}??..??`
+
+🤔🤔 Bây giờ, chúng ta sẽ tìm hiểu một chút về cái thuật toán mã hoá này ! 
+
+Vì cái `key` của chúng ta của `16` bytes nên nó sẽ được lặp lại 3 lần
+
+Và đây chính là thuật toán giải mã:
+
+![Imgur](https://i.imgur.com/WsmZL3o.png)
+
+Bây giờ, `pt[0..6] = 'TFCCTF{'` và `arr_long` thì chúng ta cũng đã biết,
+do đó công việc còn lại chỉ là chúng ta đi tìm key là xong
+
+✨✨ Đi tính `key[0..6]=pt[0..6]^arr_long[0..6]`
+
+Và code như sau:
+
+```py
+FLAG = b'TFCCTF{aaaaaaaaaaaaaaaaaaaaaaaa}'
+key = []
+for i in range(0,7):
+    key.append(FLAG[i]^arr_long[i])
+print('key[0..6] = ',key)
+```
+
+Và kết quả ta nhận được là:
+
+```txt
+key[0..6] =  [224, 243, 31, 125, 183, 9, 215]
+```
+
+🏠🏠 Ok, có được `key[0..6]` rồi, chúng ta cứ thế sẽ tính được: `pt[16:22]` và `pt[32:38]`
+
+Và đoạn code như sau:
+
+😊😊 Tính `pt[16:22]`
+
+```py
+tmp=''
+for i in range(0,7):
+    tmp=tmp+chr(arr_long[16+i]^key[i])
+print(tmp)
+```
+Và kết quả ta nhận được là: 
+
+```txt
+_h4s_l3
+```
+😊😊 Tính `pt[32:38]`
+
+```py
+tmp=''
+for i in range(0,7):
+    tmp=tmp+chr(arr_long[32+i]^key[i])
+print(tmp)
+```
+
+Và kết quả ta nhận được là: 
+
+```txt
+4t10n}?
+```
+
+Woa, chúng ta chú ý, như vậy hiện tại chuỗi `pt` của chúng ta bắt đầu lộ dần, và từ mấu chốt `pt[32:38]` chúng ta có thể xác định được luôn `pt[32:47] = 4t10n}??????????`
+
+Woa, pt của chúng ta lúc này như sau:`TFCCTF{xxxxxxxxx_h4s_l3xxxxxxxxx4t10n}??????????`
+
+☀☀ Ok, và quan trọng là khi đã xác định được `pt[32:47]` thì rõ ràng chúng ta có thể suy luận ra được kết `key[0:15]` với thuật toán như sau:
+
+```py
+find_key1=b'4t10n}??????????'
+key1=[]
+for i in range(0,16):
+    key1.append(arr_long[32+i]^find_key1[i])
+print('key[0:15]=',key1)
+```
+
+Kết quả ta thu được là: 
+
+```txt
+key[0:15]= [224, 243, 31, 125, 183, 9, 215, 60, 230, 141, 133, 35, 72, 133, 200, 26]
+```
+
+🏠🏠 Ok, có key toàn bộ rồi, lúc này công việc còn lại của chúng ta là đi tìm cờ thôi nào ! 
+
+```py
+ct=b''
+j=0
+for i in range(len(arr_long)):
+    ct += (key1[j] ^ arr_long[i]).to_bytes(1, 'big')
+    j += 1
+    j %= 16
+print(ct)
+```
+
+Và flag của chúng ta là:
+
+```txt
+b'TFCCTF{th3_tr41n_h4s_l3ft_th3_st4t10n}??????????'
+```
+
+✨✨ Ok, như vậy là ta đã hoàn tất bài toán ! 
+
+
+
+
+
+
+
+
+
 
 
 
