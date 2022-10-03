@@ -31,10 +31,12 @@
 	| **br\*** 0x401420 | Set a break point at 0x401420 |
 	| **run/r** | Run the program from the begining |
 	| **continue/c** | Run the program from the current instruction |
+	| **si/s** | Run the current instruction and stop at the next one, if it is call instruction then run first instruction of called function |
 	| **next/n** | Run the current instruction and stop at the next one |
-	| **info register** | Check value of all the register |
-	| **info breakpoints** | Check breakpoints that has been set |
+	| **info register/info r** | Check value of all the register |
+	| **info breakpoints/info b** | Check breakpoints that has been set |
 	| **del 1** | Delete the breakpoint at the 1st position |
+	| **del** | Delete all breakpoints |
 	| **pdisass functionname/address** | Display assembly code of a function or from an address |
 	| **x/...** | [Read more here](https://visualgdb.com/gdbreference/commands/x) |
 	| **vmmap** | Check all memory areas of the process |
@@ -42,7 +44,10 @@
 	| **stack n** | Show stack in n line |
 	| **set $rdi=2** | Set a value for a register |
 	| **set \*0x404020=0x1234** | Set 4 bytes from the address 0x404020 with value of 0x1234 | 
-	| **print main/&__malloc_hook/...** | Show address of a symbol |
+	| **set \*{char}0x404020=0x34** | Set 1 byte from the address 0x404020 with value of 0x34 |
+	| **set \*{long}0x404020=0x1234567812345678** | Set 8 bytes from the address 0x404020 with value of 0x1234567812345678 |
+	| **print main/&__malloc_hook/1+1...** | Show address of a symbol or value of an expression |
+	| **enter (on keyboard)** | Execute previous command |
 
 ## 3. Pwntools (python3)
 - CTF framework and exploit development library.
