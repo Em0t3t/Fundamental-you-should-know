@@ -44,8 +44,8 @@
 	| **stack n** | Show stack in n line |
 	| **set $rdi=2** | Set a value for a register |
 	| **set \*0x404020=0x1234** | Set 4 bytes from the address 0x404020 with value of 0x1234 | 
-	| **set \*{char}0x404020=0x34** | Set 1 byte from the address 0x404020 with value of 0x34 |
-	| **set \*{long}0x404020=0x1234567812345678** | Set 8 bytes from the address 0x404020 with value of 0x1234567812345678 |
+	| **set {char}0x404020=0x34** | Set 1 byte from the address 0x404020 with value of 0x34 |
+	| **set {long}0x404020=0x1234567812345678** | Set 8 bytes from the address 0x404020 with value of 0x1234567812345678 |
 	| **print main/&__malloc_hook/1+1...** | Show address of a symbol or value of an expression |
 	| **enter (on keyboard)** | Execute previous command |
 
